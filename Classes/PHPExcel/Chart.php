@@ -145,12 +145,27 @@ class PHPExcel_Chart
 	 * @var integer
 	 */
 	private $_bottomRightYOffset = 10;
+	
+	
+	/**
+	 * yAxisMinValue
+	 *
+	 * @var integer
+	 */
+	 private $_yAxisMinValue = null;
+
+	/**
+	 * yAxisMaxValue
+	 *
+	 * @var integer
+	 */
+	 private $_yAxisMaxValue = null;
 
 
 	/**
 	 * Create a new PHPExcel_Chart
 	 */
-	public function __construct($name, PHPExcel_Chart_Title $title = null, PHPExcel_Chart_Legend $legend = null, PHPExcel_Chart_PlotArea $plotArea = null, $plotVisibleOnly = true, $displayBlanksAs = '0', PHPExcel_Chart_Title $xAxisLabel = null, PHPExcel_Chart_Title $yAxisLabel = null)
+	public function __construct($name, PHPExcel_Chart_Title $title = null, PHPExcel_Chart_Legend $legend = null, PHPExcel_Chart_PlotArea $plotArea = null, $plotVisibleOnly = true, $displayBlanksAs = '0', PHPExcel_Chart_Title $xAxisLabel = null, PHPExcel_Chart_Title $yAxisLabel = null, $yAxisMinValue = null, $yAxisMaxValue = null)
 	{
 		$this->_name = $name;
 		$this->_title = $title;
@@ -159,8 +174,29 @@ class PHPExcel_Chart
 		$this->_yAxisLabel = $yAxisLabel;
 		$this->_plotArea = $plotArea;
 		$this->_plotVisibleOnly = $plotVisibleOnly;
-		$this->_displayBlanksAs = $displayBlanksAs;
+		$this->_displayBlanksAs = $displayBlanksAs;		
+		$this->_yAxisMinValue = $yAxisMinValue;
+		$this->_yAxisMaxValue = $yAxisMaxValue;
+	}	
+	
+	/**
+	 * Get yAxis Min Value
+	 *
+	 * @return array of PHPExcel_Chart_DataSeriesValues
+	 */
+	public function getYAxisMinValue() {
+		return $this->_yAxisMinValue;
 	}
+	
+	/**
+	 * Get yAxis Max Value
+	 *
+	 * @return array of PHPExcel_Chart_DataSeriesValues
+	 */
+	public function getYAxisMaxValue() {
+		return $this->_yAxisMaxValue;
+	}
+
 
 	/**
 	 * Get Name
