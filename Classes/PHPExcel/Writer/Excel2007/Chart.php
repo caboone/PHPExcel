@@ -87,7 +87,9 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 									  $pChart->getXAxisLabel(),
 									  $pChart->getYAxisLabel(),
 									  $objWriter,
-									  $pChart->getWorksheet()
+									  $pChart->getWorksheet(),
+									  $pChart->getYAxisMinValue(),
+									  $pChart->getYAxisMaxValue()
 									 );
 
 				$this->_writeLegend($pChart->getLegend(), $objWriter);
@@ -223,7 +225,9 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 									PHPExcel_Chart_Title $xAxisLabel = NULL,
 									PHPExcel_Chart_Title $yAxisLabel = NULL,
 									$objWriter,
-									PHPExcel_Worksheet $pSheet)
+									PHPExcel_Worksheet $pSheet,
+									$yAxisMinValue = NULL,
+									$yAxisMaxValue = NULL))
 	{
 		if (is_null($plotArea)) {
 			return;
@@ -340,12 +344,12 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 				($chartType !== PHPExcel_Chart_DataSeries::TYPE_DONUTCHART)) {
 
 				if ($chartType === PHPExcel_Chart_DataSeries::TYPE_BUBBLECHART) {
-					$this->_writeValAx($objWriter,$plotArea,$xAxisLabel,$chartType,$id1,$id2,$catIsMultiLevelSeries);
+					$this->_writeValAx($objWriter,$plotArea,$xAxisLabel,$chartType,$id1,$id2,$catIsMultiLevelSeries, $yAxisMinValue, $yAxisMaxValue);
 				} else {
 					$this->_writeCatAx($objWriter,$plotArea,$xAxisLabel,$chartType,$id1,$id2,$catIsMultiLevelSeries);
 				}
 
-				$this->_writeValAx($objWriter,$plotArea,$yAxisLabel,$chartType,$id1,$id2,$valIsMultiLevelSeries);
+				$this->_writeValAx($objWriter,$plotArea,$yAxisLabel,$chartType,$id1,$id2,$valIsMultiLevelSeries, $yAxisMinValue, $yAxisMaxValue);
 			}
 
 		$objWriter->endElement();
@@ -536,7 +540,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 	 * @param 	boolean						$isMultiLevelSeries
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeValAx($objWriter, PHPExcel_Chart_PlotArea $plotArea, $yAxisLabel, $groupType, $id1, $id2, $isMultiLevelSeries)
+	private function _writeValAx($objWriter, PHPExcel_Chart_PlotArea $plotArea, $yAxisLabel, $groupType, $id1, $id2, $isMultiLevelSeries, $yAxisMinValue = null, $yAxisMaxValue = null)
 	{
 		$objWriter->startElement('c:valAx');
 
@@ -549,7 +553,19 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 			$objWriter->startElement('c:scaling');
 				$objWriter->startElement('c:orientation');
 					$objWriter->writeAttribute('val', "minMax");
-				$objWriter->endElement();
+				$objWriter->endElement();				
+				
+				if($yAxisMinValue !== null){
+					$objWriter->startElement('c:min');
+						$objWriter->writeAttribute('val', $yAxisMinValue);
+					$objWriter->endElement();
+				}
+				
+				if($yAxisMaxValue !== null){
+					$objWriter->startElement('c:max');
+						$objWriter->writeAttribute('val', $yAxisMaxValue);
+					$objWriter->endElement();					
+				}
 			$objWriter->endElement();
 
 			$objWriter->startElement('c:delete');
